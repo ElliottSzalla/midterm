@@ -4,7 +4,7 @@ import json
 import os
 import sys
 import random 
-
+from datetime import datetime
 from operator import itemgetter
 
 # Instructions: Locate each section with a "TODO" present, and do them!
@@ -117,7 +117,16 @@ class Meteorites(object):
         #     None, you should return ALL values.
         #   - Don't forget to make sure that your list is sorted by year
         #     before returning it!
-        meteors = []
+        meteors = [meteor 
+                   for meteor in self._met_data
+                   if mets._within_north_america('lat','lon')]
+        
+        meteors.sort(key=lambda x: datetime.strptime(x['date'], '%Y-%m-%d'))
+
+        #handle count arguement 
+        if count is not None:
+            meteors = meteors[-count:]
+        
         return meteors
 
     # Return a LIST of the years with the MOST entries, sorted by number of entries
@@ -147,8 +156,8 @@ class Meteorites(object):
         # before you try to do this.
         
           
-        meteor_id = meteor(self, count)
-        random_id = random.sample(meteor_id, count)
+       # meteor_id = meteor(self, count)
+        random_id = random.sample(meteor(id), count)
         randoms = [meteor(id) for id in random_id]
         return randoms
 
@@ -170,6 +179,21 @@ if __name__ == "__main__":
     #       calls NICELY, like a human would want to read it. You'll probably
     #       want to do something like using a for loop with the data so that
     #       you can format each line nicely. 
-    print(mets.north_america_meteors())
-    print(mets.top_years(count=5))
-    print(mets.pick_random(count=5))
+        
+    print("meteors in North America")
+    north_america_meteors = mets.north_america_meteors
+    for meteor in north_america_meteors:
+        print(meteor)
+   # print(mets.north_america_meteors())
+    
+    print("years with highest meteor counts")
+    top_years = mets.top_years(count=5)
+    for year, count in top_years(count=5):
+        print(f"{year}: {count} meteor")
+   # print(mets.top_years(count=5))
+        
+    print("randomly picked meteors")
+    pick_random = mets.pick_random(count=5)
+    for meteor in pick_random:
+        print(meteor)
+    #print(mets.pick_random(count=5))
